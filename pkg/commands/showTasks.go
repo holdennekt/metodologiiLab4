@@ -21,7 +21,7 @@ func (sc *showTasksCommand) Run(args []string) error {
 		fmt.Println("all")
 	}
 	if sc.todo {
-		// TODO: implement "show uncompleted tasks" scenario
+		// TODO: implement "show active tasks" scenario
 		fmt.Println("uncompleted")
 	}
 	if sc.exp {
