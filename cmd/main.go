@@ -14,6 +14,7 @@ type Command interface {
 func main() {
 	cmds := []Command{
 		commands.NewShowTasksCommand(),
+		// rest of commands
 	}
 	for _, cmd := range cmds {
 		if os.Args[1] == cmd.Name() {
