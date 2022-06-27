@@ -20,10 +20,18 @@ type Connection struct {
 }
 
 func (c *Connection) String() string {
-	userInfo := fmt.Sprintf("%s:%s", c.User, c.Password)
-	host := fmt.Sprintf("%s:%d", c.Host, c.Port)
-	url := fmt.Sprintf("postgresql://%s@%s/%s?sslmode=disable", userInfo, host, c.DbName)
-	return url
+    dbUrl := &url.URL{
+        Scheme: "postgres",
+        Host:   c.Host,
+        User:   url.UserPassword(c.User, c.Password),
+        Path:   c.DbName,
+    }
+    if c.DisableSSL {
+        dbUrl.RawQuery = url.Values{
+            "sslmode": []string{"disable"},
+        }.Encode()
+    }
+    return dbUrl.String()
 }
 
 func NewDataProvider(conn Connection) (*DataProvider, error) {
