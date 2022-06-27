@@ -15,4 +15,4 @@
 # vendor/
 
 todo
-*_test.go
+.DS_Store
