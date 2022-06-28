@@ -27,13 +27,13 @@ func (dp *DataProvider) getTasks(sqlQuery string) ([]*Task, error) {
 }
 
 func (dp *DataProvider) ListAllTasks() ([]*Task, error) {
-	return dp.getTasks("select * from tasks;")
+	return dp.getTasks("select * from tasks")
 }
 
 func (dp *DataProvider) ListActiveTasks() ([]*Task, error) {
-	return dp.getTasks("select * from tasks where completed=false and expired=false order by deadline asc;")
+	return dp.getTasks("select * from tasks where completed=false and expired=false order by deadline asc")
 }
 
 func (dp *DataProvider) ListExpiredTasks() ([]*Task, error) {
-	return dp.getTasks("select * from tasks where expired=true order by deadline asc;")
+	return dp.getTasks("select * from tasks where expired=true order by deadline asc")
 }
