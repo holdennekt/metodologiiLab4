@@ -44,11 +44,12 @@ func main() {
 		log.Fatal("failed to parse config:", err)
 	}
 	conn := dataproviders.Connection{
-		Host:     config.Host,
-		Port:     config.Port,
-		User:     config.User,
-		Password: config.Password,
-		DbName:   "todo",
+		Host:       config.Host,
+		Port:       config.Port,
+		User:       config.User,
+		Password:   config.Password,
+		DbName:     "todo",
+		DisableSSL: true,
 	}
 	dp, err := dataproviders.NewDataProvider(conn)
 	if err != nil {
