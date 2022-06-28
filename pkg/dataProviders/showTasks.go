@@ -5,14 +5,14 @@ package dataproviders
 // ShowActiveTasks
 // ShowExpiredTasks
 
-func (dp *DataProvider) ShowAllTasks(id int) (*[]Task, error) {
+func (dp *DataProvider) ListAllTasks() ([]*Task, error) {
 	return nil, nil
 }
 
-func (dp *DataProvider) ShowActiveTasks(id int) (*[]Task, error) {
+func (dp *DataProvider) ListActiveTasks() ([]*Task, error) {
 	return nil, nil
 }
 
-func (dp *DataProvider) ShowExpiredTasks(id int) (*[]Task, error) {
+func (dp *DataProvider) ListExpiredTasks() ([]*Task, error) {
 	return nil, nil
 }
