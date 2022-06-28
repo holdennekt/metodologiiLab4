@@ -27,7 +27,7 @@ func (dp *DataProvider) getTasks(sqlQuery string) ([]*Task, error) {
 }
 
 func (dp *DataProvider) ListAllTasks() ([]*Task, error) {
-	return dp.getTasks("select * from tasks")
+	return dp.getTasks("select * from tasks order by id")
 }
 
 func (dp *DataProvider) ListActiveTasks() ([]*Task, error) {

@@ -7,9 +7,8 @@ import (
 )
 
 const (
-	initQuery                = "drop table if exists tasks; create table tasks (id bigserial not null primary key, title varchar(50) not null, details varchar(200), deadline date, expired boolean not null default false, completed boolean not null default false, completed_at date)"
-	listAllTasksTestQuery    = "insert into tasks (title, details, deadline) values ('finish 4 lab', 'yes, 4th wall was crushed', '2022-06-29'); insert into tasks (title, details, deadline, completed, completed_at) values ('make some tea', 'black tea with 2 spoons of sugar', '2022-06-28', true, '2022-06-28')"
-	listActiveTasksTestQuery = "insert into tasks (title, details, deadline) values ('get beraly good at css', 'learn css a bit, even level \"not being disgusted while formatting small pet project\" will be fine', '2022-08-31'), ('finish 4 lab', 'yes, 4th wall was crushed', '2022-06-29'); insert into tasks (title) values ('watch Neon Genesis Evangelion'); insert into tasks (title, details, deadline, completed, completed_at) values ('make some tea', 'black tea with 2 spoons of sugar', '2022-06-28', true, '2022-06-28'), ('turn 19', 'yea, that`s it', '2022-04-24', true, '2022-04-23'); insert into tasks (title, details, deadline, expired) values ('read some books', 'science fiction like aisek azimov is fine, as well as rey breadberry', '2022-05-23', true), ('find a gift to the friend', 'maybe paper model constructor, maybe some arduino stuff', '2022-06-28', true)"
+	dataForListAllTasks    = "insert into tasks (title, details, deadline) values ('finish 4 lab', 'yes, 4th wall was crushed', '2022-06-29'); insert into tasks (title, details, deadline, completed, completed_at) values ('make some tea', 'black tea with 2 spoons of sugar', '2022-06-28', true, '2022-06-28')"
+	dataForListActiveTasks = "insert into tasks (title, details, deadline) values ('get beraly good at css', 'learn css a bit, even level \"not being disgusted while formatting small pet project\" will be fine', '2022-08-31'), ('finish 4 lab', 'yes, 4th wall was crushed', '2022-06-29'); insert into tasks (title) values ('watch Neon Genesis Evangelion'); insert into tasks (title, details, deadline, completed, completed_at) values ('make some tea', 'black tea with 2 spoons of sugar', '2022-06-28', true, '2022-06-28'), ('turn 19', 'yea, that`s it', '2022-04-24', true, '2022-04-23'); insert into tasks (title, details, deadline, expired) values ('read some books', 'science fiction like aisek azimov is fine, as well as rey breadberry', '2022-05-23', true), ('find a gift to the friend', 'maybe paper model constructor, maybe some arduino stuff', '2022-06-28', true)"
 )
 
 func TestListAllTasks(t *testing.T) {
@@ -26,12 +25,11 @@ func TestListAllTasks(t *testing.T) {
 		t.Fatalf("error while creating db: %v", err)
 	}
 	defer dataProvider.db.Close()
-
 	_, err = dataProvider.db.Query(initQuery)
 	if err != nil {
 		t.Fatalf("failed to init db: %v", err)
 	}
-	_, err = dataProvider.db.Query(listAllTasksTestQuery)
+	_, err = dataProvider.db.Query(dataForListAllTasks)
 	if err != nil {
 		t.Fatalf("failed to fill db: %v", err)
 	}
@@ -60,7 +58,7 @@ func TestListActiveTasks(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to init db: %v", err)
 	}
-	_, err = dataProvider.db.Query(listActiveTasksTestQuery)
+	_, err = dataProvider.db.Query(dataForListActiveTasks)
 	if err != nil {
 		t.Fatalf("failed to fill db: %v", err)
 	}
