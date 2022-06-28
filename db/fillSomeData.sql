@@ -1,8 +1,8 @@
 \c todo;
 
 insert into tasks (title, details, deadline) values
-('finish 4 lab', 'yes, 4th wall was crushed', '2022-06-29'),
-('get beraly good at css', 'learn css a bit, even level "not being disgusted while formatting small pet project" will be fine', '2022-08-31');
+('get beraly good at css', 'learn css a bit, even level "not being disgusted while formatting small pet project" will be fine', '2022-08-31'),
+('finish 4 lab', 'yes, 4th wall was crushed', '2022-06-29');
 
 insert into tasks (title) values ('watch Neon Genesis Evangelion');
 

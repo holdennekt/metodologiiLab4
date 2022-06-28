@@ -11,6 +11,3 @@ create table tasks (
   completed boolean not null default false,
   completed_at date
 );
-
-insert into tasks (title, details, deadline) 
-values ('find job', 'what`s wrong, no money??(megamind face)', '2022-09-01');
