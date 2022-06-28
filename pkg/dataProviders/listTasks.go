@@ -31,7 +31,7 @@ func (dp *DataProvider) ListAllTasks() ([]*Task, error) {
 }
 
 func (dp *DataProvider) ListActiveTasks() ([]*Task, error) {
-	return dp.getTasks("select * from tasks where completed=false order by deadline asc;")
+	return dp.getTasks("select * from tasks where completed=false and expired=false order by deadline asc;")
 }
 
 func (dp *DataProvider) ListExpiredTasks() ([]*Task, error) {
