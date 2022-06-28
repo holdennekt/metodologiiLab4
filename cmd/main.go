@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/holdennekt/metodologiiLab4/pkg/commands"
+	dataproviders "github.com/holdennekt/metodologiiLab4/pkg/dataProviders"
 )
 
 type Command interface {
@@ -43,9 +43,19 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to parse config:", err)
 	}
-	fmt.Println(config)
+	conn := dataproviders.Connection{
+		Host:     config.Host,
+		Port:     config.Port,
+		User:     config.User,
+		Password: config.Password,
+		DbName:   "todo",
+	}
+	dp, err := dataproviders.NewDataProvider(conn)
+	if err != nil {
+		log.Fatal("failed to open db connection:", err)
+	}
 	cmds := []Command{
-		commands.NewShowTasksCommand(),
+		commands.NewShowTasksCommand(dp),
 		// rest of commands
 	}
 	for _, cmd := range cmds {
