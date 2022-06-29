@@ -13,7 +13,7 @@ go build -o ./cmd/todo cmd/main.go
 
 Команда запуску тестів:
 ```
-go test ./pkg/dataProviders
+go test ./pkg/commands ./pkg/dataProviders
 ```
 
 Для роботи потрібно у корені проєкту створити файл config.js з конфігурацією підклюення до бази даних подібного формату:
