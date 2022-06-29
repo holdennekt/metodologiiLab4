@@ -56,8 +56,11 @@ func main() {
 		log.Fatal("failed to open db connection:", err)
 	}
 	cmds := []Command{
-		commands.NewShowTasksCommand(dp),
-		// rest of commands
+		commands.NewShowTasksCommand(os.Stdout, dp),
+		commands.NewNewTaskCommand(os.Stdout, dp),
+		commands.NewEditTaskCommand(os.Stdout, dp),
+		commands.NewCompleteTaskCommand(os.Stdout, dp),
+		commands.NewDeleteTaskCommand(os.Stdout, dp),
 	}
 	for _, cmd := range cmds {
 		if os.Args[1] == cmd.Name() {

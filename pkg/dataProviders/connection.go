@@ -7,19 +7,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type DataProvider struct {
-	db *sql.DB
-}
-
-func NewDataProvider(conn Connection) (*DataProvider, error) {
-	url := conn.String()
-	db, err := sql.Open("postgres", url)
-	if err != nil {
-		return nil, err
-	}
-	return &DataProvider{db}, nil
-}
-
 type Connection struct {
 	Host       string
 	Port       int
@@ -44,12 +31,6 @@ func (c *Connection) String() string {
 	return dbUrl.String()
 }
 
-type Task struct {
-	Id          int
-	Title       string
-	Details     sql.NullString
-	Deadline    sql.NullTime
-	Expired     bool
-	Completed   bool
-	CompletedAt sql.NullTime
+func (c *Connection) Open() (*sql.DB, error) {
+	return sql.Open("postgres", c.String())
 }
