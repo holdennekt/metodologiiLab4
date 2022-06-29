@@ -1,8 +1,10 @@
 package commands
 
 import (
+	"bytes"
+	"errors"
 	"flag"
-	"fmt"
+	"io"
 
 	dataproviders "github.com/holdennekt/metodologiiLab4/pkg/dataProviders"
 )
@@ -10,85 +12,72 @@ import (
 type showTasksCommand struct {
 	fs             flag.FlagSet
 	all, todo, exp bool
-	dataProvider   *dataproviders.DataProvider
+	output         io.Writer
+	dataProvider   dataproviders.Repository
 }
 
-func showTask(t *dataproviders.Task) {
-	var details string
-	if t.Details.Valid {
-		details = t.Details.String
-	} else {
-		details = "no details"
+func NewShowTasksCommand(output io.Writer, dp dataproviders.Repository) *showTasksCommand {
+	stc := &showTasksCommand{
+		fs:           *flag.NewFlagSet("show", flag.ContinueOnError),
+		output:       output,
+		dataProvider: dp,
 	}
-	var deadline string
-	if t.Deadline.Valid {
-		year := t.Deadline.Time.Year()
-		month := t.Deadline.Time.Month().String()
-		day := t.Deadline.Time.Day()
-		deadline = fmt.Sprintf("%v %v %v", day, month, year)
-	} else {
-		deadline = "no deadline"
-	}
-	var completedAt string
-	if t.CompletedAt.Valid {
-		year := t.CompletedAt.Time.Year()
-		month := t.CompletedAt.Time.Month().String()
-		day := t.CompletedAt.Time.Day()
-		completedAt = fmt.Sprintf("%v %v %v", day, month, year)
-	} else {
-		completedAt = "wasn't completed"
-	}
-	fmt.Printf("id: %v, title: %v\ndetails: %v\ndeadline: %v, expired: %v\ncompleted: %v, completedAt: %v\n", t.Id, t.Title, details, deadline, t.Expired, t.Completed, completedAt)
-	fmt.Println("----------------------------------------------------------------")
+	stc.fs.BoolVar(&stc.all, "all", false, "all tasks")
+	stc.fs.BoolVar(&stc.todo, "todo", false, "uncompleted tasks")
+	stc.fs.BoolVar(&stc.exp, "exp", false, "expired tasks")
+	return stc
 }
 
-func showTasks(tasks []*dataproviders.Task) {
+func (stc *showTasksCommand) Name() string {
+	return stc.fs.Name()
+}
+
+func (stc *showTasksCommand) showTasks(tasks []*dataproviders.Task) {
+	out := make([][]byte, 0)
 	for _, task := range tasks {
-		showTask(task)
+		out = append(out, []byte(getTaskStr(task)))
 	}
+	sep := []byte("-------------------------------------------------------\n")
+	stc.output.Write(bytes.Join(out, sep))
 }
 
-func (sc *showTasksCommand) Run(args []string) error {
-	err := sc.fs.Parse(args)
+func (stc *showTasksCommand) Run(args []string) error {
+	stc.dataProvider.UpdateState()
+	err := stc.fs.Parse(args)
 	if err != nil {
 		return err
 	}
-	ifAny := sc.all || sc.todo || sc.exp
-	if !ifAny || sc.all {
-		tasks, err := sc.dataProvider.ListAllTasks()
-		if err != nil {
-			return err
+	flags := []bool{stc.all, stc.todo, stc.exp}
+	timesTrue := 0
+	for _, v := range flags {
+		if v {
+			timesTrue++
 		}
-		showTasks(tasks)
 	}
-	if sc.todo {
-		tasks, err := sc.dataProvider.ListActiveTasks()
-		if err != nil {
-			return err
-		}
-		showTasks(tasks)
+	if timesTrue > 1 {
+		return errors.New("only 1 of the folowing flags allowed at a time: -all, -todo, -exp")
 	}
-	if sc.exp {
-		tasks, err := sc.dataProvider.ListExpiredTasks()
+	ifAny := stc.all || stc.todo || stc.exp
+	if !ifAny || stc.all {
+		tasks, err := stc.dataProvider.ListAllTasks()
 		if err != nil {
 			return err
 		}
-		showTasks(tasks)
+		stc.showTasks(tasks)
+	}
+	if stc.todo {
+		tasks, err := stc.dataProvider.ListActiveTasks()
+		if err != nil {
+			return err
+		}
+		stc.showTasks(tasks)
+	}
+	if stc.exp {
+		tasks, err := stc.dataProvider.ListExpiredTasks()
+		if err != nil {
+			return err
+		}
+		stc.showTasks(tasks)
 	}
 	return nil
-}
-
-func (sc *showTasksCommand) Name() string {
-	return sc.fs.Name()
-}
-
-func NewShowTasksCommand(dp *dataproviders.DataProvider) *showTasksCommand {
-	sc := &showTasksCommand{
-		fs:           *flag.NewFlagSet("show", flag.ContinueOnError),
-		dataProvider: dp,
-	}
-	sc.fs.BoolVar(&sc.all, "all", false, "all tasks")
-	sc.fs.BoolVar(&sc.todo, "todo", false, "uncompleted tasks")
-	sc.fs.BoolVar(&sc.exp, "exp", false, "expired tasks")
-	return sc
 }
