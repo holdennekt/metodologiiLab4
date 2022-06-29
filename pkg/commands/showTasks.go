@@ -3,11 +3,14 @@ package commands
 import (
 	"flag"
 	"fmt"
+
+	dataproviders "github.com/holdennekt/metodologiiLab4/pkg/dataProviders"
 )
 
 type showTasksCommand struct {
 	fs             flag.FlagSet
 	all, todo, exp bool
+	dataProvider   *dataproviders.DataProvider
 }
 
 func (sc *showTasksCommand) Run(args []string) error {
@@ -35,9 +38,10 @@ func (sc *showTasksCommand) Name() string {
 	return sc.fs.Name()
 }
 
-func NewShowTasksCommand() *showTasksCommand {
+func NewShowTasksCommand(dp *dataproviders.DataProvider) *showTasksCommand {
 	sc := &showTasksCommand{
-		fs: *flag.NewFlagSet("show", flag.ContinueOnError),
+		fs:           *flag.NewFlagSet("show", flag.ContinueOnError),
+		dataProvider: dp,
 	}
 	sc.fs.BoolVar(&sc.all, "all", false, "all tasks")
 	sc.fs.BoolVar(&sc.todo, "todo", false, "uncompleted tasks")
