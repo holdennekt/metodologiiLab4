@@ -11,6 +11,11 @@ go build -o ./cmd/todo cmd/main.go
 ./cmd/todo <command> [<args>]
 ```
 
+Команда запуску тестів:
+```
+go test ./pkg/dataProviders
+```
+
 Для роботи потрібно у корені проєкту створити файл config.js з конфігурацією підклюення до бази даних подібного формату:
 ```json
 {

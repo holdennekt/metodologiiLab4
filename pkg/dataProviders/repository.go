@@ -39,5 +39,20 @@ func NewDataProvider(conn Connection) (*DataProvider, error) {
 }
 
 func (dp *DataProvider) UpdateState() error {
+	tasks, err := dp.getTasks("select * from tasks where expired=false and completed=false and deadline is not null")
+	if err != nil {
+		return err
+	}
+	for _, task := range tasks {
+		year, month, day := time.Now().Date()
+		loc, _ := time.LoadLocation("UTC")
+		date := time.Date(year, month, day, 0, 0, 0, 0, loc)
+		if date.After(task.Deadline.Time) {
+			err = dp.markExpired(task.Id)
+			if err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
