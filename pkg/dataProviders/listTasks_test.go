@@ -12,17 +12,9 @@ const (
 )
 
 func TestListAllTasks(t *testing.T) {
-	conn := Connection{
-		Host:       "localhost",
-		Port:       5432,
-		User:       "nikitagryshchak",
-		Password:   "",
-		DbName:     "todo",
-		DisableSSL: true,
-	}
-	dataProvider, err := NewDataProvider(conn)
+	dataProvider, err := getTestDataProvider(dataForUpdateState)
 	if err != nil {
-		t.Fatalf("error while creating db: %v", err)
+		t.Fatal(err)
 	}
 	defer dataProvider.db.Close()
 	_, err = dataProvider.db.Query(initQuery)
@@ -41,17 +33,9 @@ func TestListAllTasks(t *testing.T) {
 }
 
 func TestListActiveTasks(t *testing.T) {
-	conn := Connection{
-		Host:       "localhost",
-		Port:       5432,
-		User:       "nikitagryshchak",
-		Password:   "",
-		DbName:     "todo",
-		DisableSSL: true,
-	}
-	dataProvider, err := NewDataProvider(conn)
+	dataProvider, err := getTestDataProvider(dataForUpdateState)
 	if err != nil {
-		t.Fatalf("error while creating db: %v", err)
+		t.Fatal(err)
 	}
 	defer dataProvider.db.Close()
 	_, err = dataProvider.db.Query(initQuery)

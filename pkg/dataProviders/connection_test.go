@@ -19,7 +19,7 @@ func getTestDataProvider(query string) (*DataProvider, error) {
 		Port:       5432,
 		User:       "nikitagryshchak",
 		Password:   "",
-		DbName:     "todo",
+		DbName:     "todotest",
 		DisableSSL: true,
 	}
 	dataProvider, err := NewDataProvider(conn)
@@ -43,7 +43,7 @@ func TestNewDataProvider(t *testing.T) {
 		Port:       5432,
 		User:       "nikitagryshchak",
 		Password:   "",
-		DbName:     "todo",
+		DbName:     "todotest",
 		DisableSSL: true,
 	}
 	dataProvider, err := NewDataProvider(conn)
